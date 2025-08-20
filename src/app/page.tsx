@@ -39,7 +39,7 @@ const App = () => {
   ];
 
   // Handle smooth scroll to sections
-  const scrollToSection = (ref) => {
+  const scrollToSection = (ref: any) => {
     ref.current.scrollIntoView({ behavior: 'smooth' });
   };
 
