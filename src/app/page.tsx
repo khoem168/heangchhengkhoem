@@ -150,7 +150,7 @@ const App = () => {
         <h3 className="text-4xl font-bold text-white text-center mb-8">Get In Touch</h3>
         <div className="max-w-xl mx-auto text-center space-y-4">
           <p className="text-lg text-gray-400">
-            I'm currently open to new opportunities. Feel free to reach out!
+            Im currently open to new opportunities. Feel free to reach out!
           </p>
           <a
             href="mailto:your.email@example.com" // Replace with your email
