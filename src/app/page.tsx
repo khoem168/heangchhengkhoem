@@ -63,7 +63,7 @@ const App = () => {
       <section ref={homeRef} className="flex flex-col items-center justify-center text-center p-8 md:p-16 min-h-[calc(100vh-64px)]">
         <div className="max-w-4xl space-y-4">
           <h2 className="text-5xl md:text-7xl font-extrabold text-white leading-tight">
-            Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">John Doe</span>
+            Hi, Im <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">John Doe</span>
           </h2>
           <p className="text-2xl text-gray-300 font-light">
             Software Engineer | Full Stack Developer
@@ -86,11 +86,7 @@ const App = () => {
       <section ref={aboutRef} className="container mx-auto py-16 px-4 md:px-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-12">
           <div className="w-full lg:w-1/3">
-            <Image
-              src="https://placehold.co/400x400/1f2937/d1d5db?text=Your+Photo"
-              alt="Profile"
-              className="w-full rounded-full shadow-lg"
-            />
+            <Image src="https://placehold.co/400x400/1f2937/d1d5db?text=Your+Photo"alt="Description" width={500} height={300} />
           </div>
           <div className="w-full lg:w-2/3">
             <h3 className="text-4xl font-bold text-white mb-4">About Me</h3>
