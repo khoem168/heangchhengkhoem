@@ -1,5 +1,6 @@
 'use client';
 import React, { useRef } from 'react';
+import Image from 'next/image';
 
 // Main App component
 const App = () => {
@@ -85,7 +86,7 @@ const App = () => {
       <section ref={aboutRef} className="container mx-auto py-16 px-4 md:px-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-12">
           <div className="w-full lg:w-1/3">
-            <img
+            <Image
               src="https://placehold.co/400x400/1f2937/d1d5db?text=Your+Photo"
               alt="Profile"
               className="w-full rounded-full shadow-lg"
