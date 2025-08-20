@@ -5,11 +5,11 @@ import Image from 'next/image';
 // Main App component
 const App = () => {
   // Create refs for smooth scrolling to sections
-  const homeRef = useRef(null);
-  const aboutRef = useRef(null);
-  const projectsRef = useRef(null);
-  const skillsRef = useRef(null);
-  const contactRef = useRef(null);
+  const homeRef = useRef<HTMLElement>(null);
+  const aboutRef = useRef<HTMLElement>(null);
+  const projectsRef = useRef<HTMLElement>(null);
+  const skillsRef = useRef<HTMLElement>(null);
+  const contactRef = useRef<HTMLElement>(null);
 
   // Mock data for projects - replace with your own projects
   const projects = [
@@ -39,8 +39,10 @@ const App = () => {
   ];
 
   // Handle smooth scroll to sections
-  const scrollToSection = (ref: any) => {
-    ref.current.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
@@ -63,7 +65,7 @@ const App = () => {
       <section ref={homeRef} className="flex flex-col items-center justify-center text-center p-8 md:p-16 min-h-[calc(100vh-64px)]">
         <div className="max-w-4xl space-y-4">
           <h2 className="text-5xl md:text-7xl font-extrabold text-white leading-tight">
-            Hi, Im <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">John Doe</span>
+            Hi, I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">John Doe</span>
           </h2>
           <p className="text-2xl text-gray-300 font-light">
             Software Engineer | Full Stack Developer
@@ -86,7 +88,13 @@ const App = () => {
       <section ref={aboutRef} className="container mx-auto py-16 px-4 md:px-8">
         <div className="flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 lg:space-x-12">
           <div className="w-full lg:w-1/3">
-            <Image src="https://placehold.co/400x400/1f2937/d1d5db?text=Your+Photo"alt="Description" width={500} height={300} />
+            <Image
+              src="https://placehold.co/400x400/1f2937/d1d5db?text=Your+Photo"
+              alt="Description"
+              width={500}
+              height={500}
+              className="w-full rounded-full shadow-lg"
+            />
           </div>
           <div className="w-full lg:w-2/3">
             <h3 className="text-4xl font-bold text-white mb-4">About Me</h3>
@@ -147,7 +155,7 @@ const App = () => {
         <h3 className="text-4xl font-bold text-white text-center mb-8">Get In Touch</h3>
         <div className="max-w-xl mx-auto text-center space-y-4">
           <p className="text-lg text-gray-400">
-            Im currently open to new opportunities. Feel free to reach out!
+            I&apos;m currently open to new opportunities. Feel free to reach out!
           </p>
           <a
             href="mailto:your.email@example.com" // Replace with your email
