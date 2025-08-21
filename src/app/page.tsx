@@ -65,7 +65,7 @@ const App = () => {
       <section ref={homeRef} className="flex flex-col items-center justify-center text-center p-8 md:p-16 min-h-[calc(100vh-64px)]">
         <div className="max-w-4xl space-y-4">
           <h2 className="text-5xl md:text-7xl font-extrabold text-white leading-tight">
-            Hi, I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">John Doe</span>
+            Hi, I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">Heang Chhengkhoem</span>
           </h2>
           <p className="text-2xl text-gray-300 font-light">
             Software Engineer | Full Stack Developer
@@ -177,7 +177,7 @@ const App = () => {
 
       {/* Footer */}
       <footer className="py-8 text-center text-gray-500 border-t border-gray-800">
-        <p>&copy; {new Date().getFullYear()} John Doe. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Heang Chhengkhoem. All rights reserved.</p>
       </footer>
     </div>
   );
