@@ -74,12 +74,12 @@ const App = () => {
             I build modern, responsive, and scalable web applications. Explore my work to see how I can help bring your ideas to life.
           </p>
           <a
-            href="https://github.com/yourusername" // Replace with your GitHub URL
+            href="https://web.facebook.com/khoem168" // Replace with your GitHub URL
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block mt-6 px-6 py-3 bg-white text-gray-900 font-bold rounded-full shadow-lg hover:bg-gray-200 transition-transform duration-300 transform hover:scale-105"
           >
-            View My GitHub
+            My Facebook <Account></Account>
           </a>
         </div>
       </section>
