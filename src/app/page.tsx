@@ -79,7 +79,7 @@ const App = () => {
             rel="noopener noreferrer"
             className="inline-block mt-6 px-6 py-3 bg-white text-gray-900 font-bold rounded-full shadow-lg hover:bg-gray-200 transition-transform duration-300 transform hover:scale-105"
           >
-            My Facebook <Account></Account>
+            My Facebook Account
           </a>
         </div>
       </section>
