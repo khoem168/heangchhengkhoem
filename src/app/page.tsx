@@ -50,7 +50,7 @@ const App = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-blur-sm p-4 border-b border-gray-700">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">John Doe</h1>
+          <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-blue-500">Heang Chhengkhoem</h1>
           <nav className="space-x-4 hidden md:block">
             <button onClick={() => scrollToSection(homeRef)} className="text-gray-300 hover:text-white transition-colors duration-300">Home</button>
             <button onClick={() => scrollToSection(aboutRef)} className="text-gray-300 hover:text-white transition-colors duration-300">About</button>
