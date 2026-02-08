@@ -1,29 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  /* Festive Colors */
-  --christmas-red: #b91c1c;
-  --christmas-green: #064e3b;
-  --gold: #fbbf24;
+  --background: #050505;
+  --foreground: #ffffff;
+  /* Premium Cold Aesthetic */
+  --cyan-primary: #00D9FF;
+  --blue-primary: #3B82F6;
+  --teal-primary: #14B8A6;
+  --slate-dark: #0f172a;
+  --slate-light: #f1f5f9;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-xmas-red: var(--christmas-red);
-  --color-xmas-green: var(--christmas-green);
-  --color-gold: var(--gold);
+  --color-cyan: var(--cyan-primary);
+  --color-blue: var(--blue-primary);
+  --color-teal: var(--teal-primary);
+  --color-slate-dark: var(--slate-dark);
+  --color-slate-light: var(--slate-light);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Firefox scrollbar: thumb and track colors (no gradients) */
+  scrollbar-color: #00D9FF rgba(0, 217, 255, 0.05);
+  scrollbar-width: thin;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   overflow-x: hidden;
+  transition: background-color 0.7s ease, color 0.7s ease;
 }
 
-/* Snowfall Animation */
+/* ===== PREMIUM COLD AESTHETIC ANIMATIONS ===== */
+
+/* Ambient Snowfall with Cyan Glow */
 .snow-container {
   position: fixed;
   top: 0;
@@ -32,17 +46,229 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 10;
+  background: radial-gradient(ellipse at 20% 50%, rgba(0, 217, 255, 0.03) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
 }
 
 .snow-flake {
   position: absolute;
-  background-color: white;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.8), rgba(20, 184, 166, 0.2));
   border-radius: 50%;
-  opacity: 0.8;
-  animation: fall linear infinite;
+  opacity: 0.6;
+  animation: snowfall 10s linear infinite;
+  box-shadow: 0 0 12px rgba(0, 217, 255, 0.4), 0 0 24px rgba(59, 130, 246, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
-@keyframes fall {
-  0% { transform: translateY(-10vh) translateX(0); }
-  100% { transform: translateY(110vh) translateX(20px); }
+.snow-flake:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.6), 0 0 40px rgba(59, 130, 246, 0.4);
+  transform: scale(1.15) translateZ(0);
+}
+
+/* Main snowfall animation - combines fall, drift, and sway */
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10vh) translateX(0) scale(1);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.3;
+  }
+  10% {
+    transform: translateY(5vh) translateX(8px) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(25vh) translateX(15px) scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateY(50vh) translateX(20px) scale(0.95);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translateY(75vh) translateX(12px) scale(0.9);
+    opacity: 0.65;
+  }
+  90% {
+    transform: translateY(95vh) translateX(25px) scale(0.8);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(110vh) translateX(35px) scale(0.75);
+    opacity: 0;
+  }
+}
+
+/* Smooth scroll behavior for all sections */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 217, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #00D9FF, #3B82F6, #14B8A6);
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #22D3EE, #60A5FA, #2DD4BF);
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+}
+
+/* Selection styling - cold aesthetic */
+::selection {
+  background: linear-gradient(90deg, #00D9FF, #3B82F6, #14B8A6);
+  color: white;
+}
+
+::-moz-selection {
+  background: linear-gradient(90deg, #00D9FF, #3B82F6, #14B8A6);
+  color: white;
+}
+
+/* Dark mode transitions */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background: #fcfcfc;
+    color: #0a0a0a;
+  }
+  
+  .snow-flake {
+    background: radial-gradient(circle, rgba(0, 217, 255, 0.6), rgba(59, 130, 246, 0.3));
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.3), 0 0 16px rgba(0, 217, 255, 0.2);
+  }
+}
+
+/* Smooth animations for all transitions */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .snow-flake {
+    opacity: 0.4 !important;
+  }
+}
+
+/* ===== Retro Merry Christmas (xmas-old) ===== */
+.snow-container.xmas-old {
+  background: radial-gradient(ellipse at 10% 20%, rgba(185,28,28,0.04), transparent 30%),
+              radial-gradient(ellipse at 90% 80%, rgba(6,78,59,0.04), transparent 30%);
+}
+
+.snow-flake.xmas-old-flake {
+  background: radial-gradient(circle, rgba(185,28,28,0.9), rgba(6,78,59,0.6));
+  box-shadow: 0 0 10px rgba(185,28,28,0.25), 0 0 18px rgba(6,78,59,0.15);
+  opacity: 0.85;
+  border: 1px solid rgba(255,255,255,0.05);
+  animation: snowfall-xmas 12s linear infinite;
+}
+
+@keyframes snowfall-xmas {
+  0% { 
+    transform: translateY(-12vh) translateX(0) scale(1); 
+    opacity: 0; 
+  }
+  5% { 
+    opacity: 0.5; 
+  }
+  10% { 
+    transform: translateY(8vh) translateX(-8px) scale(1); 
+    opacity: 0.85; 
+  }
+  30% { 
+    transform: translateY(30vh) translateX(-15px) scale(1); 
+    opacity: 0.9; 
+  }
+  50% { 
+    transform: translateY(50vh) translateX(-20px) scale(0.95); 
+    opacity: 0.9; 
+  }
+  70% { 
+    transform: translateY(70vh) translateX(-12px) scale(0.9); 
+    opacity: 0.85; 
+  }
+  90% { 
+    transform: translateY(95vh) translateX(-25px) scale(0.85); 
+    opacity: 0.4; 
+  }
+  100% { 
+    transform: translateY(110vh) translateX(-30px) scale(0.85); 
+    opacity: 0; 
+  }
+}
+
+.xmas-banner {
+  position: fixed;
+  right: 18px;
+  top: 18px;
+  z-index: 60;
+  pointer-events: none;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  transform: translateY(-10px) scale(0.98);
+  animation: banner-in 900ms cubic-bezier(.2,.9,.3,1) forwards 300ms;
+}
+
+.xmas-banner-inner {
+  background: linear-gradient(90deg, rgba(185,28,28,0.95), rgba(6,78,59,0.95));
+  padding: 8px 14px;
+  border-radius: 999px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 6px 22px rgba(0,0,0,0.45), 0 0 18px rgba(185,28,28,0.12);
+}
+
+.xmas-ribbon { 
+  display:inline-block; 
+  font-size:12px; 
+  font-weight:800; 
+  color:#fff; 
+  opacity:0.95; 
+  text-transform:uppercase; 
+}
+
+.xmas-text {
+  color: #fff;
+  font-family: var(--font-playfair), serif;
+  font-size:14px;
+  letter-spacing:0.08em;
+}
+
+.xmas-ornaments { display:flex; gap:8px; margin-left:8px; }
+.ornament { width:10px; height:10px; border-radius:50%; display:inline-block; box-shadow:0 6px 14px rgba(0,0,0,0.35); }
+.ornament.o-0 { background: #b91c1c; }
+.ornament.o-1 { background: #064e3b; }
+.ornament.o-2 { background: #fbbf24; }
+.ornament.o-3 { background: radial-gradient(circle, #ffefc2, #b91c1c); }
+.ornament.o-4 { background: radial-gradient(circle, #c2ffe9, #064e3b); }
+
+@keyframes banner-in {
+  0% { transform: translateY(-20px) scale(0.95); opacity: 0; }
+  100% { transform: translateY(0px) scale(1); opacity: 1; }
+}
+
+/* Accessibility: reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .snow-flake, .snow-flake.xmas-old-flake { animation: none !important; }
+  .xmas-banner { animation: none !important; }
 }
