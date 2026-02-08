@@ -20,7 +20,8 @@ const rateLimiter = new RateLimiter(5, 3600000);
 export async function POST(request: NextRequest) {
   try {
     // 1. Security: Check IP-based rate limiting (5 requests/hour)
-    const clientIP = getClientIP(request.headers as Record<string, string | string[] | undefined>);
+    const headers = Object.fromEntries(request.headers);
+    const clientIP = getClientIP(headers as Record<string, string | string[] | undefined>);
     if (rateLimiter.isLimited(clientIP)) {
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
@@ -129,7 +130,7 @@ export async function POST(request: NextRequest) {
  * OPTIONS /api/contact
  * Handle CORS preflight requests
  */
-export async function OPTIONS(request: NextRequest) {
+export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
