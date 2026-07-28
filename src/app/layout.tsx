@@ -1,39 +1,89 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Manrope, Noto_Sans_Khmer } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
-const playfair = Playfair_Display({ 
-  subsets: ["latin"], 
-  variable: '--font-playfair' 
+const deployedHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (deployedHost ? `https://${deployedHost}` : "http://localhost:3000");
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+});
+const notoSansKhmer = Noto_Sans_Khmer({
+  subsets: ["khmer"],
+  variable: "--font-khmer",
 });
 
 export const metadata: Metadata = {
-  title: "Heang Chheng Khoem",
-  description: "Software Engineer & Digital Marketing Specialist",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Heang Chheng Khoem | Software Engineer & Digital Strategist",
+    template: "%s | Heang Chheng Khoem",
+  },
+  description:
+    "Portfolio of Heang Chheng Khoem - software engineering, fintech integration, digital operations, SEO, and creative media.",
+  applicationName: "Heang Chheng Khoem Portfolio",
+  keywords: [
+    "Heang Chheng Khoem",
+    "software engineer Cambodia",
+    "fintech integration",
+    "KHQR",
+    "Bakong API",
+    "Next.js developer",
+    "digital operations",
+    "technical SEO",
+  ],
+  authors: [{ name: "Heang Chheng Khoem" }],
+  creator: "Heang Chheng Khoem",
+  category: "Technology",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    title: "Heang Chheng Khoem | Software Engineer & Digital Strategist",
+    description:
+      "Digital products, connected systems, growth, and creative media built around practical business outcomes.",
+    siteName: "Heang Chheng Khoem",
+    images: [
+      {
+        url: "/images/og-portfolio.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Heang Chheng Khoem portfolio preview",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Heang Chheng Khoem | Software Engineer & Digital Strategist",
+    description:
+      "Digital products, connected systems, growth, and creative media built around practical business outcomes.",
+    images: ["/images/og-portfolio.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.className}`}>
-      <body>
-        <div className="snow-container">
-           {[...Array(35)].map((_, i) => (
-             <div 
-               key={i} 
-               className="snow-flake" 
-               style={{
-                 left: `${Math.random() * 100}%`,
-                 width: `${Math.random() * 4 + 2}px`,
-                 height: `${Math.random() * 4 + 2}px`,
-                 animationDuration: `${Math.random() * 8 + 5}s`,
-                 animationDelay: `${Math.random() * 5}s`
-               }}
-             />
-           ))}
-        </div>
-        {children}
-      </body>
+    <html
+      lang="en"
+      className={`${inter.variable} ${manrope.variable} ${notoSansKhmer.variable} ${inter.className}`}
+    >
+      <body>{children}</body>
     </html>
   );
 }

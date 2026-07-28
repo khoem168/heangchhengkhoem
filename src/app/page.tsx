@@ -1,659 +1,936 @@
 'use client';
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+
 import Image from 'next/image';
-import XmasToggle from '@/components/XmasToggle';
-import AuditTips from '@/components/AuditTips';
+import { useEffect, useState } from 'react';
+import type { IconType } from 'react-icons';
+import { FaDatabase } from 'react-icons/fa';
+import { MdOutlineSupportAgent, MdVideoSettings } from 'react-icons/md';
+import { RiQrCodeLine } from 'react-icons/ri';
+import {
+  SiAngular,
+  SiDotnet,
+  SiFacebook,
+  SiGithub,
+  SiNextdotjs,
+  SiOpenapiinitiative,
+  SiTelegram,
+  SiTiktok,
+  SiTypescript,
+  SiYoutube,
+} from 'react-icons/si';
+import { TbAutomation, TbBrain, TbSeo } from 'react-icons/tb';
 
-/* ==========================================================
-   THE 2026 ARCHITECT PORTFOLIO: HEANG CHHENG KHOEM
-   Optimized for: Next.js 15, Vercel, and National Lead Branding
-   [UPDATED] Mobile-Responsive | Testimonials | Smooth Animations | All Devices
-   ========================================================== */
+type Language = 'en' | 'kh';
+type Theme = 'light' | 'dark';
 
-type SectionKey = 'home' | 'about' | 'services' | 'skills' | 'platforms' | 'portfolio' | 'testimonials' | 'highlights' | 'contact';
+type IconName =
+  | 'arrow'
+  | 'code'
+  | 'external'
+  | 'growth'
+  | 'menu'
+  | 'moon'
+  | 'payment'
+  | 'play'
+  | 'spark'
+  | 'sun'
+  | 'support'
+  | 'x';
 
-export default function App() {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const [lang, setLang] = useState<'en' | 'kh'>('en');
-  const [mounted, setMounted] = useState(false);
+const navigation = [
+  { id: 'about', en: 'About', kh: 'អំពីខ្ញុំ' },
+  { id: 'services', en: 'Services', kh: 'សេវាកម្ម' },
+  { id: 'work', en: 'Work', kh: 'ស្នាដៃ' },
+  { id: 'skills', en: 'Toolkit', kh: 'ជំនាញ' },
+  { id: 'contact', en: 'Contact', kh: 'ទំនាក់ទំនង' },
+];
+
+const services = [
+  {
+    icon: 'code' as IconName,
+    number: '01',
+    label: 'Build',
+    title: 'Product Engineering',
+    titleKh: 'ការអភិវឌ្ឍផលិតផលឌីជីថល',
+    description:
+      'Reliable digital products designed around how your business actually works.',
+    descriptionKh:
+      'បង្កើតផលិតផលឌីជីថលដែលអាចទុកចិត្តបាន និងសមស្របនឹងរបៀបដំណើរការអាជីវកម្មរបស់អ្នក។',
+    items: ['Websites & web applications', 'Business tools & automation', 'API & database integration'],
+  },
+  {
+    icon: 'payment' as IconName,
+    number: '02',
+    label: 'Connect',
+    title: 'Payments & Fintech',
+    titleKh: 'ការទូទាត់ និងបច្ចេកវិទ្យាហិរញ្ញវត្ថុ',
+    description:
+      'Secure local payment experiences that feel simple for customers and teams.',
+    descriptionKh:
+      'បង្កើតបទពិសោធន៍ទូទាត់ប្រាក់ក្នុងស្រុកប្រកបដោយសុវត្ថិភាព និងងាយស្រួលប្រើ។',
+    items: ['KHQR & Bakong integration', 'Automated payment workflows', 'Real-time status & callbacks'],
+  },
+  {
+    icon: 'growth' as IconName,
+    number: '03',
+    label: 'Grow',
+    title: 'Growth & Performance',
+    titleKh: 'កំណើន និងប្រសិទ្ធភាព',
+    description:
+      'Practical growth systems that turn visibility into measurable business results.',
+    descriptionKh:
+      'ប្រព័ន្ធកំណើនជាក់ស្តែងដែលបម្លែងការមើលឃើញទៅជាលទ្ធផលអាជីវកម្មដែលអាចវាស់វែងបាន។',
+    items: ['SEO foundations & strategy', 'Campaigns & analytics', 'Conversion improvement'],
+  },
+  {
+    icon: 'play' as IconName,
+    number: '04',
+    label: 'Create',
+    title: 'Content & Brand Systems',
+    titleKh: 'មាតិកា និងប្រព័ន្ធម៉ាកយីហោ',
+    description:
+      'Consistent content workflows that help modern brands communicate with clarity.',
+    descriptionKh:
+      'ដំណើរការមាតិកាដែលជួយម៉ាកយីហោទំនើបប្រាស្រ័យទាក់ទងបានច្បាស់លាស់ និងស៊ីសង្វាក់គ្នា។',
+    items: ['Video editing & production', 'Creative direction & scripts', 'Reusable content workflows'],
+  },
+];
+
+const projects = [
+  {
+    type: 'Confidential operations platform',
+    title: 'Multi-Branch Operations Hub',
+    description:
+      'A connected operating system for coordinating digital campaigns, technical support, and branch performance.',
+    result: 'Unified workflow',
+    tags: ['Operations', 'Analytics', 'Automation'],
+    tone: 'green',
+    image: '/images/project-operations.webp',
+    imageAlt: 'Anonymized multi-branch operations dashboard interface',
+    role: 'Product engineer & operations lead',
+    timeline: 'Multi-phase delivery',
+    stack: ['.NET Core', 'Oracle', 'Automation'],
+    challenge: 'Coordinate national campaign activity, technical support, and branch reporting without fragmented workflows.',
+    solution: 'A unified operating workflow that connects daily priorities, performance visibility, and response tracking.',
+    responsibilities: ['Workflow architecture', 'Operations automation', 'Performance reporting'],
+    outcomes: ['Centralized operations', 'Faster issue response', 'Clear branch visibility'],
+  },
+  {
+    type: 'Fintech infrastructure',
+    title: 'KHQR Payment Gateway',
+    description:
+      'A secure automated payment flow with real-time transaction checks and reliable callback handling.',
+    result: 'Live status',
+    tags: ['KHQR', 'Bakong API', 'Security'],
+    tone: 'navy',
+    image: '/images/project-payments.webp',
+    imageAlt: 'Anonymized payment operations and callback monitoring dashboard',
+    role: 'Integration developer',
+    timeline: 'Phased integration',
+    stack: ['.NET Core', 'REST APIs', 'KHQR & Bakong'],
+    challenge: 'Make local digital payments reliable while keeping transaction status simple for customers and operators.',
+    solution: 'A secure KHQR flow with real-time checks, callback handling, and clear operational states.',
+    responsibilities: ['Payment flow design', 'Callback handling', 'Operational monitoring'],
+    outcomes: ['Automated verification', 'Reliable callbacks', 'Simpler payment support'],
+  },
+  {
+    type: 'Growth platform',
+    title: 'SEO Command Center',
+    description:
+      'A performance dashboard for monitoring search visibility, branch conversion, and campaign return.',
+    result: 'Clear visibility',
+    tags: ['SEO', 'Dashboard', 'Strategy'],
+    tone: 'sand',
+    image: '/images/project-seo.webp',
+    imageAlt: 'Anonymized search performance and conversion analytics dashboard',
+    role: 'SEO & analytics lead',
+    timeline: 'Ongoing optimization',
+    stack: ['Technical SEO', 'Analytics', 'Next.js'],
+    challenge: 'Turn scattered campaign and search data into decisions teams can understand and act on quickly.',
+    solution: 'A focused dashboard that combines visibility, branch conversion, and campaign return in one view.',
+    responsibilities: ['Technical SEO reviews', 'Dashboard design', 'Performance analysis'],
+    outcomes: ['Shared performance view', 'Faster optimization', 'Measurable growth'],
+  },
+  {
+    type: 'Content ecosystem',
+    title: 'Narrative Media Hub',
+    description:
+      'A streamlined publishing workflow for high-retention video storytelling across multiple channels.',
+    result: 'Reusable workflow',
+    tags: ['Video', 'Content', 'Distribution'],
+    tone: 'violet',
+    image: '/images/project-media.webp',
+    imageAlt: 'Anonymized content planning and publishing operations dashboard',
+    role: 'Content systems lead',
+    timeline: 'Repeatable production cycle',
+    stack: ['Video editing', 'Automation', 'Distribution'],
+    challenge: 'Publish consistent story-led content across channels without slowing down creative production.',
+    solution: 'A repeatable workflow for planning, producing, reviewing, and distributing video content.',
+    responsibilities: ['Editorial workflow', 'Production planning', 'Channel distribution'],
+    outcomes: ['Consistent publishing', 'Reusable workflows', 'Stronger retention'],
+  },
+];
+
+const skillGroups = [
+  {
+    icon: 'code' as IconName,
+    number: '01',
+    label: 'Build',
+    title: 'Product Engineering',
+    titleKh: 'ការអភិវឌ្ឍផលិតផល',
+    description: 'Modern foundations for fast, reliable, and maintainable digital products.',
+    descriptionKh: 'មូលដ្ឋានគ្រឹះទំនើបសម្រាប់ផលិតផលឌីជីថលដែលលឿន អាចទុកចិត្តបាន និងងាយថែទាំ។',
+    skills: ['Angular', '.NET Core', 'Next.js', 'TypeScript'],
+  },
+  {
+    icon: 'payment' as IconName,
+    number: '02',
+    label: 'Connect',
+    title: 'Systems & Payments',
+    titleKh: 'ប្រព័ន្ធ និងការទូទាត់',
+    description: 'Secure connections between business data, services, and local payment infrastructure.',
+    descriptionKh: 'ការតភ្ជាប់ប្រកបដោយសុវត្ថិភាពរវាងទិន្នន័យ សេវាកម្ម និងប្រព័ន្ធទូទាត់ក្នុងស្រុក។',
+    skills: ['Oracle Database', 'REST APIs', 'KHQR & Bakong', 'Automation'],
+  },
+  {
+    icon: 'growth' as IconName,
+    number: '03',
+    label: 'Grow',
+    title: 'Growth & Creative',
+    titleKh: 'កំណើន និងភាពច្នៃប្រឌិត',
+    description: 'Practical capabilities for reaching audiences, creating content, and supporting users.',
+    descriptionKh: 'ជំនាញជាក់ស្តែងសម្រាប់ការទាក់ទាញទស្សនិកជន បង្កើតមាតិកា និងគាំទ្រអ្នកប្រើប្រាស់។',
+    skills: ['Technical SEO', 'Video Editing', 'AI Prompting', 'Technical Support'],
+  },
+];
+
+const socialLinks = [
+  { name: 'GitHub', url: 'https://github.com/khoem168' },
+  { name: 'Facebook', url: 'https://facebook.com/heang.chhengkhoem.me' },
+  { name: 'YouTube', url: 'https://youtube.com/@khoemofficial' },
+  { name: 'TikTok', url: 'https://tiktok.com/@khoem168' },
+  { name: 'Telegram', url: 'https://t.me/khoem168' },
+];
+
+const skillIconMap: Record<string, IconType> = {
+  Angular: SiAngular,
+  '.NET Core': SiDotnet,
+  'Next.js': SiNextdotjs,
+  TypeScript: SiTypescript,
+  'Oracle Database': FaDatabase,
+  'REST APIs': SiOpenapiinitiative,
+  'KHQR & Bakong': RiQrCodeLine,
+  Automation: TbAutomation,
+  'Technical SEO': TbSeo,
+  'Video Editing': MdVideoSettings,
+  'AI Prompting': TbBrain,
+  'Technical Support': MdOutlineSupportAgent,
+};
+
+const socialIconMap: Record<string, IconType> = {
+  GitHub: SiGithub,
+  Facebook: SiFacebook,
+  YouTube: SiYoutube,
+  TikTok: SiTiktok,
+  Telegram: SiTelegram,
+};
+
+const copy = {
+  en: {
+    availability: 'Available for selected projects',
+    eyebrow: 'Software engineer · Digital strategist',
+    heroTitle: 'I build digital products that move businesses forward.',
+    heroDescription:
+      'I connect software engineering, digital operations, and creative media to turn complex ideas into simple, useful experiences.',
+    viewWork: 'View selected work',
+    contactMe: 'Start a conversation',
+    basedIn: 'Based in Cambodia',
+    experience: 'Building across technology, operations & media',
+    stats: [
+      { value: '4', label: 'Connected disciplines' },
+      { value: '12', label: 'Core capabilities' },
+      { value: '2', label: 'Working languages' },
+      { value: '1', label: 'Point of contact' },
+    ],
+    aboutLabel: 'About me',
+    aboutTitle: 'One partner for technology, growth, and execution.',
+    aboutText:
+      'I am Heang Chheng Khoem, a software engineer and digital operations specialist. My work sits where reliable technology meets practical business growth—from enterprise applications and payment systems to SEO and multimedia production.',
+    aboutTextTwo:
+      'I care about clear communication, thoughtful systems, and work that creates a measurable result—not technology for its own sake.',
+    roleLabel: 'Current focus',
+    role: 'National Operations Lead',
+    roleCompany: 'Digital systems, campaign operations, and scalable workflows.',
+    servicesLabel: 'Capabilities',
+    servicesTitle: 'From first idea to launch—and everything after.',
+    servicesText:
+      'Choose one focused service or combine them into a complete digital workflow built for your goals.',
+    workLabel: 'Selected work',
+    workTitle: 'Selected work, built for real-world use.',
+    workText:
+      'Project details are intentionally anonymized while showing the thinking, systems, and outcomes behind the work.',
+    result: 'Outcome',
+    toolkitLabel: 'Toolkit',
+    toolkitTitle: 'The right tools for reliable results.',
+    toolkitText:
+      'I choose technology for clarity, performance, and long-term maintainability—not simply because it is trending.',
+    processLabel: 'Working together',
+    processTitle: 'Clear collaboration from first conversation to delivery.',
+    process: [
+      {
+        title: 'Understand',
+        text: 'We define the real problem, desired outcome, and constraints before choosing a solution.',
+      },
+      {
+        title: 'Build',
+        text: 'I design and deliver a focused system with consistent updates and practical decisions.',
+      },
+      {
+        title: 'Improve',
+        text: 'We measure what matters, learn from real usage, and keep the system effective over time.',
+      },
+    ],
+    contactLabel: 'Let’s work together',
+    contactTitle: 'Have an idea that needs a reliable digital partner?',
+    contactText:
+      'Tell me about your project, business goal, or technical challenge. I will reply with a clear next step.',
+    email: 'Send me an email',
+    footer: 'Software · Operations · Growth',
+  },
+  kh: {
+    availability: 'ទទួលគម្រោងថ្មីដែលសមស្រប',
+    eyebrow: 'វិស្វករកម្មវិធី · អ្នករៀបចំយុទ្ធសាស្ត្រឌីជីថល',
+    heroTitle: 'ខ្ញុំបង្កើតផលិតផលឌីជីថលដែលជួយអាជីវកម្មរីកចម្រើន។',
+    heroDescription:
+      'ខ្ញុំភ្ជាប់ការអភិវឌ្ឍកម្មវិធី ប្រតិបត្តិការឌីជីថល និងមាតិកាច្នៃប្រឌិត ដើម្បីបម្លែងគំនិតស្មុគស្មាញទៅជាបទពិសោធន៍សាមញ្ញ និងមានប្រយោជន៍។',
+    viewWork: 'មើលស្នាដៃ',
+    contactMe: 'ចាប់ផ្តើមការសន្ទនា',
+    basedIn: 'មានមូលដ្ឋាននៅកម្ពុជា',
+    experience: 'ធ្វើការលើបច្ចេកវិទ្យា ប្រតិបត្តិការ និងមេឌៀ',
+    stats: [
+      { value: '4', label: 'ជំនាញដែលភ្ជាប់គ្នា' },
+      { value: '12', label: 'សមត្ថភាពស្នូល' },
+      { value: '2', label: 'ភាសាការងារ' },
+      { value: '1', label: 'អ្នកទំនាក់ទំនង' },
+    ],
+    aboutLabel: 'អំពីខ្ញុំ',
+    aboutTitle: 'ដៃគូម្នាក់សម្រាប់បច្ចេកវិទ្យា កំណើន និងការអនុវត្ត។',
+    aboutText:
+      'ខ្ញុំឈ្មោះ ហ៊ាង ឆេង ខឹម ជាវិស្វករកម្មវិធី និងអ្នកជំនាញប្រតិបត្តិការឌីជីថល។ ការងាររបស់ខ្ញុំភ្ជាប់បច្ចេកវិទ្យាដែលអាចទុកចិត្តបានជាមួយកំណើនអាជីវកម្មជាក់ស្តែង។',
+    aboutTextTwo:
+      'ខ្ញុំផ្តោតលើការទំនាក់ទំនងច្បាស់លាស់ ប្រព័ន្ធដែលគិតបានល្អ និងលទ្ធផលដែលអាចវាស់វែងបាន។',
+    roleLabel: 'ការងារបច្ចុប្បន្ន',
+    role: 'ប្រធានប្រតិបត្តិការថ្នាក់ជាតិ',
+    roleCompany: 'ប្រព័ន្ធឌីជីថល ការគ្រប់គ្រងយុទ្ធនាការ និងដំណើរការដែលអាចពង្រីកបាន។',
+    servicesLabel: 'សមត្ថភាព',
+    servicesTitle: 'ចាប់ពីគំនិតដំបូងរហូតដល់ដាក់ឱ្យប្រើប្រាស់ និងបន្តកែលម្អ។',
+    servicesText:
+      'ជ្រើសរើសសេវាកម្មមួយ ឬភ្ជាប់សេវាកម្មទាំងនេះជាដំណើរការឌីជីថលពេញលេញសម្រាប់គោលដៅរបស់អ្នក។',
+    workLabel: 'ស្នាដៃដែលបានជ្រើសរើស',
+    workTitle: 'ស្នាដៃដែលបានជ្រើសរើស និងបង្កើតសម្រាប់ការប្រើប្រាស់ជាក់ស្តែង។',
+    workText:
+      'ព័ត៌មានគម្រោងត្រូវបានលាក់ឈ្មោះដោយចេតនា ដើម្បីគោរពភាពឯកជន ខណៈបង្ហាញពីដំណើរការ ប្រព័ន្ធ និងលទ្ធផល។',
+    result: 'លទ្ធផល',
+    toolkitLabel: 'ជំនាញ និងឧបករណ៍',
+    toolkitTitle: 'ឧបករណ៍ត្រឹមត្រូវ សម្រាប់លទ្ធផលដែលអាចទុកចិត្តបាន។',
+    toolkitText:
+      'ខ្ញុំជ្រើសរើសបច្ចេកវិទ្យាដោយផ្តោតលើភាពច្បាស់លាស់ ល្បឿន និងភាពងាយស្រួលក្នុងការថែទាំរយៈពេលវែង។',
+    processLabel: 'ការធ្វើការជាមួយគ្នា',
+    processTitle: 'កិច្ចសហការច្បាស់លាស់ ចាប់ពីការសន្ទនាដំបូងរហូតដល់ការប្រគល់។',
+    process: [
+      {
+        title: 'ស្វែងយល់',
+        text: 'យើងកំណត់បញ្ហា លទ្ធផលដែលចង់បាន និងដែនកំណត់ មុនជ្រើសរើសដំណោះស្រាយ។',
+      },
+      {
+        title: 'អភិវឌ្ឍ',
+        text: 'ខ្ញុំរចនា និងអនុវត្តប្រព័ន្ធដោយមានការធ្វើបច្ចុប្បន្នភាពច្បាស់លាស់។',
+      },
+      {
+        title: 'កែលម្អ',
+        text: 'យើងវាស់វែងអ្វីដែលសំខាន់ រៀនពីការប្រើប្រាស់ពិត និងកែលម្អជាបន្តបន្ទាប់។',
+      },
+    ],
+    contactLabel: 'ធ្វើការជាមួយគ្នា',
+    contactTitle: 'មានគំនិតដែលត្រូវការដៃគូឌីជីថលដែលអាចទុកចិត្តបានមែនទេ?',
+    contactText:
+      'ប្រាប់ខ្ញុំអំពីគម្រោង គោលដៅអាជីវកម្ម ឬបញ្ហាបច្ចេកទេសរបស់អ្នក។ ខ្ញុំនឹងឆ្លើយតបជាមួយជំហានបន្ទាប់ដែលច្បាស់លាស់។',
+    email: 'ផ្ញើអ៊ីមែលមកខ្ញុំ',
+    footer: 'កម្មវិធី · ប្រតិបត្តិការ · កំណើន',
+  },
+};
+
+function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
+  const paths: Record<IconName, React.ReactNode> = {
+    arrow: <path d="M5 12h14m-5-5 5 5-5 5" />,
+    code: <path d="m8 9-3 3 3 3m8-6 3 3-3 3m-3-9-2 12" />,
+    external: <path d="M14 5h5v5m0-5-8 8M19 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" />,
+    growth: <path d="M4 18 10 12l4 4 6-8m-5 0h5v5" />,
+    menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+    moon: <path d="M20 15.2A8.5 8.5 0 0 1 8.8 4 8.5 8.5 0 1 0 20 15.2Z" />,
+    payment: <path d="M3 7h18v11H3zM3 10h18M7 15h3" />,
+    play: <path d="m9 7 8 5-8 5V7Zm-5 0v10" />,
+    spark: <path d="m12 3 1.4 4.6L18 9l-4.6 1.4L12 15l-1.4-4.6L6 9l4.6-1.4L12 3Zm6 12 .7 2.3L21 18l-2.3.7L18 21l-.7-2.3L15 18l2.3-.7L18 15Z" />,
+    sun: <path d="M12 4V2m0 20v-2M4 12H2m20 0h-2m-2.3-5.7 1.4-1.4M4.9 19.1l1.4-1.4m11.4 0 1.4 1.4M4.9 4.9l1.4 1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z" />,
+    support: <path d="M5 12a7 7 0 0 1 14 0v5a2 2 0 0 1-2 2h-2v-6h4M5 13h4v6H7a2 2 0 0 1-2-2v-5Z" />,
+    x: <path d="m6 6 12 12M18 6 6 18" />,
+  };
+
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1.8"
+      viewBox="0 0 24 24"
+      width={size}
+    >
+      {paths[name]}
+    </svg>
+  );
+}
+
+export default function Home() {
+  const [theme, setTheme] = useState<Theme>('light');
+  const [language, setLanguage] = useState<Language>('en');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('top');
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [active, setActive] = useState<SectionKey>('home');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const t = copy[language];
 
-  // Stable Refs for Navigation
-  const homeRef = useRef<HTMLElement>(null);
-  const aboutRef = useRef<HTMLElement>(null);
-  const servicesRef = useRef<HTMLElement>(null);
-  const skillsRef = useRef<HTMLElement>(null);
-  const platformsRef = useRef<HTMLElement>(null);
-  const portfolioRef = useRef<HTMLElement>(null);
-  const testimonialsRef = useRef<HTMLElement>(null);
-  const highlightsRef = useRef<HTMLElement>(null);
-  const contactRef = useRef<HTMLElement>(null);
-
-  // useMemo ensures the sections object remains constant, preventing useEffect crashes on Vercel
-  const sectionsMap = useMemo(() => ({
-    home: homeRef,
-    about: aboutRef,
-    services: servicesRef,
-    skills: skillsRef,
-    platforms: platformsRef,
-    portfolio: portfolioRef,
-    testimonials: testimonialsRef,
-    highlights: highlightsRef,
-    contact: contactRef,
-  }), []);
-
-  /* ================= MASTER DATA SUITE (FULL OPTION) ================= */
-  
-  const stats = [
-    { label: 'Systems Built', val: '15+', kh: 'ប្រព័ន្ធបានបង្កើត' },
-    { label: 'Uptime Integrity', val: '100%', kh: 'ដំណើរការប្រព័ន្ធ' },
-    { label: 'Market Conversion', val: '+45%', kh: 'អត្រាកំណើន' },
-    { label: 'Network Reach', val: 'National', kh: 'បណ្តាញសាខា' }
-  ];
-
-  const services = [
-    { 
-      titleEn: "Software Architecture", 
-      titleKh: "ស្ថាបត្យកម្មកម្មវិធី", 
-      icon: "💻", 
-      descEn: "Designing robust, scalable systems using Angular and .NET Core optimized for enterprise workloads.", 
-      descKh: "រចនាប្រព័ន្ធដែលអាចធ្វើមាត្រដ្ឋានបានដោយប្រើ Angular និង .NET Core។" 
-    },
-    { 
-      titleEn: "Digital Operations", 
-      titleKh: "ប្រតិបត្តិការឌីជីថល", 
-      icon: "📈", 
-      descEn: "Leading national digital growth strategies, ad-boosting operations, and technical SEO infrastructure.", 
-      descKh: "ដឹកនាំយុទ្ធសាស្ត្រលូតលាស់ឌីជីថល និងប្រតិបត្តិការ SEO បច្ចេកទេស។" 
-    },
-    { 
-      titleEn: "Fintech & Payment Logic", 
-      titleKh: "បច្ចេកវិទ្យាហិរញ្ញវត្ថុ", 
-      icon: "💳", 
-      descEn: "Expert integration of KHQR, Bakong APIs, and secure automated payment callback systems.", 
-      descKh: "ការរួមបញ្ចូល KHQR, Bakong API និងប្រព័ន្ធទូទាត់ប្រាក់ស្វ័យប្រវត្តិ។" 
-    },
-    { 
-      titleEn: "Multimedia Production", 
-      titleKh: "ផលិតកម្មពហុព័ត៌មាន", 
-      icon: "🎬", 
-      descEn: "High-retention storytelling, professional movie recaps, and creative video scriptwriting.", 
-      descKh: "ការនិទានរឿង សម្រាយរឿង និងការសរសេរអត្ថបទវីដេអូច្នៃប្រឌិត។" 
-    }
-  ];
-
-  const skillGroups = [
-    { 
-      titleEn: "Engineering Stack", 
-      titleKh: "ជំនាញបច្ចេកទេស", 
-      items: ["Angular", ".NET Core", "Oracle SQL", "Next.js", "Docker", "RESTful APIs", "PHP/XAMPP", "TypeScript", "MySQL"] 
-    },
-    { 
-      titleEn: "Growth & Strategy", 
-      titleKh: "យុទ្ធសាស្ត្ររីកចម្រើន", 
-      items: ["Technical SEO", "FB Ad Boosting", "TikTok Ads", "Google Ads", "SMM Architecture", "Market Analysis", "A/B Testing"] 
-    },
-    { 
-      titleEn: "Professional IT Operations", 
-      titleKh: "ប្រតិបត្តិការ IT អាជីព", 
-      items: ["KHQR Sync Logic", "System Uptime Ops", "Network Support", "Branch Optimization", "Digital Security", "Troubleshooting"] 
-    },
-    { 
-      titleEn: "Creative Content", 
-      titleKh: "មាតិកាច្នៃប្រឌិត", 
-      items: ["Movie Recaps", "Professional Narration", "Video Editing", "Copywriting", "YouTube SEO", "Engagement Strategy"] 
-    }
-  ];
-
-  const platforms = [
-    { name: "SMM Panel V3.0", icon: "🚀", desc: "A custom-built automated distribution engine for social growth." },
-    { name: "Bakong Gateway Pro", icon: "🏦", desc: "Secure middleware logic connecting local businesses to KHQR sync." },
-    { name: "SEO Command Center", icon: "📊", desc: "Live analytics dashboard for tracking national branch conversion ROI." },
-    { name: "Multimedia Portal", icon: "🎬", desc: "High-performance storytelling hub for video content distribution." }
-  ];
-
-  const portfolioItems = [
-    { name: "888 Up National Ops", cat: "Lead Strategy", impact: "100% Uptime", icon: "💎" },
-    { name: "KHQR Auto-Payment", cat: "Fintech Logic", impact: "Real-time Sync", icon: "💳" },
-    { name: "Branch SEO Network", cat: "Growth SEO", impact: "Top 1 Rankings", icon: "🔍" },
-    { name: "Recap Narrative Hub", cat: "Content Media", impact: "High Retention", icon: "🎥" }
-  ];
-
-  const testimonials = [
-    {
-      nameEn: "David Chen",
-      nameKh: "ដេវីដ ឆេង",
-      roleEn: "CEO, Digital Ventures",
-      roleKh: "ប្រធានក្រុមហ៊ុន Digital Ventures",
-      textEn: "Heang's technical expertise and strategic vision transformed our entire digital infrastructure. Outstanding results!",
-      textKh: "ភាពស្ទាក់ស្ទើរ និងផ្នែកយុទ្ធសាស្ត្ររបស់ Heang បានផ្លាស់ប្តូរហេដ្ឋារចនាសម្ព័ន្ធឌីជីថលរបស់យើង។",
-      rating: 5,
-      icon: "⭐"
-    },
-    {
-      nameEn: "Sophia Rodriguez",
-      nameKh: "សូផៀ រ៉ូដ្រីហ្គេស",
-      roleEn: "Director, 888 Up Fast Cash",
-      roleKh: "នាយក 888 Up Fast Cash",
-      textEn: "A true professional who delivers excellence. His KHQR integration saved us 40% in operational costs!",
-      textKh: "ឯកទេស ដែលផ្តល់នូវលទ្ធផលល្អបំផុត។ ការរួមបញ្ចូល KHQR របស់គាត់បានសន្សំលុយក្រុមហ៊ុន។",
-      rating: 5,
-      icon: "🌟"
-    },
-    {
-      nameEn: "Michael Torres",
-      nameKh: "មីឆែល ទូរេស",
-      roleEn: "VP Product, National Tech",
-      roleKh: "ប្រធាននាយកផលិតផល",
-      textEn: "The SEO strategy implementation was brilliant. We achieved top 1 rankings in just 6 months!",
-      textKh: "ប្រអប់ SEO របស់គាត់ផ្តល់លទ្ធផលយ៉ាងល្អ រក្សាតំណែង #១។",
-      rating: 5,
-      icon: "✨"
-    },
-    {
-      nameEn: "Emma Watson",
-      nameKh: "អែម វ៉ាតសុន",
-      roleEn: "Marketing Lead, Brand Hub",
-      roleKh: "នាយក Marketing Brand Hub",
-      textEn: "His multimedia production work elevated our brand presence significantly. Highly recommended!",
-      textKh: "ផលិតកម្មពហុព័ត៌មាននៃគាត់បានលើកកម្ពស់ម៉ាកយីហោយើង។",
-      rating: 5,
-      icon: "🎯"
-    },
-    {
-      nameEn: "James Park",
-      nameKh: "ជេម ផាក",
-      roleEn: "CTO, Tech Innovation Labs",
-      roleKh: "នាយក IT Tech Innovation",
-      textEn: "Heang's architecture expertise is world-class. He built a system handling 10M+ daily transactions flawlessly!",
-      textKh: "ស្ថាបត្យកម្មរបស់ Heang គឺឆ្នើម។ ប្រព័ន្ធដែលគាត់បង្កើតដោះស្រាយ ១០លាននៃប្រតិបត្តិការប្រចាំថ្ងៃ។",
-      rating: 5,
-      icon: "💎"
-    },
-    {
-      nameEn: "Lisa Anderson",
-      nameKh: "លីសា អាន់ដើរសិន",
-      roleEn: "Founder, E-Commerce Plus",
-      roleKh: "ស្ថាបនិក ហាង ឌីជីថល",
-      textEn: "His digital strategy increased our online sales by 380% in just one year. Simply incredible growth!",
-      textKh: "យុទ្ធសាស្ត្ររបស់គាត់បានលើកលំដាប់លក់ ៣៨០% ក្នុងមួយឆ្នាំ។",
-      rating: 5,
-      icon: "🚀"
-    },
-    {
-      nameEn: "Robert Nakamura",
-      nameKh: "របឺត នាកាមូរា",
-      roleEn: "Operations Manager, National Bank",
-      roleKh: "អ្នកគ្រប់គ្រងប្រតិបត្តិការ",
-      textEn: "His payment integration system is the most reliable we've ever implemented. Zero payment failures!",
-      textKh: "ប្រព័ន្ធទូទាត់របស់គាត់គឺជឿលេបំផុត ដែលយើងបានប្រើប្រាស់។",
-      rating: 5,
-      icon: "💳"
-    },
-    {
-      nameEn: "Christine Lee",
-      nameKh: "ឆ្រីស្ទីន លី",
-      roleEn: "Head of Marketing, Global Brands",
-      roleKh: "នាយក Marketing សកល",
-      textEn: "His content strategy and video production expertise brought our brand visibility to unprecedented levels!",
-      textKh: "ផលិតកម្ម និងយុទ្ធសាស្ត្របង្ហាញម៉ាករបស់គាត់គឺលើស្មើលែង។",
-      rating: 5,
-      icon: "🎬"
-    },
-    {
-      nameEn: "Ahmed Hassan",
-      nameKh: "អាមេដ ហាសាន",
-      roleEn: "CFO, Southeast Asia Finance Group",
-      roleKh: "ប្រធាននាយក ហិរញ្ញវត្ថុ",
-      textEn: "His fintech solutions revolutionized our payment processing. 99.99% system uptime guaranteed!",
-      textKh: "ដំណោះស្រាយហិរញ្ញវត្ថុរបស់គាត់បានផ្លាស់ប្តូរលក្ខណៈប្រតិបត្តិការរបស់យើង។",
-      rating: 5,
-      icon: "🏦"
-    },
-    {
-      nameEn: "Patricia Brown",
-      nameKh: "ផាត្រីशિយា ប្រោន",
-      roleEn: "CEO, Media Production House",
-      roleKh: "ប្រធាន ផលិតកម្មវីដេអូ",
-      textEn: "Heang's creative vision combined with technical skill created award-winning content for our clients!",
-      textKh: "ចក្ខុវិស័យច្នៃប្រឌិត និងបច្ចេកទេសរបស់គាត់បង្កើតមាតិកាល្អបំផុត។",
-      rating: 5,
-      icon: "🎥"
-    },
-    {
-      nameEn: "Marco Vincenti",
-      nameKh: "មាកូ វីនសេនទី",
-      roleEn: "Director, Enterprise Solutions",
-      roleKh: "នាយក ដំណោះស្រាយសហគ្រាស",
-      textEn: "His API integrations are seamless and well-documented. Enterprise-grade quality across the board!",
-      textKh: "ការរួមបញ្ចូល API របស់គាត់គឺល្អ និងឯក្សារល្អ។",
-      rating: 5,
-      icon: "⚙️"
-    },
-    {
-      nameEn: "Olivia Martinez",
-      nameKh: "អូលីវៀ មាទីនេស",
-      roleEn: "SVP Growth, Regional Expansion",
-      roleKh: "ប្រធាននាយក ការលូតលាស់",
-      textEn: "His market analysis and growth hacking strategies helped us expand into 5 new territories successfully!",
-      textKh: "វិភាគ និងយុទ្ធសាស្ត្រលូតលាស់របស់គាត់ជួយយើងពង្រីកទីផ្សារ។",
-      rating: 5,
-      icon: "📊"
-    },
-    {
-      nameEn: "Nicholas Sterling",
-      nameKh: "នីកូឡាស ស្ទើលីង",
-      roleEn: "CEO, Quantum Digital Solutions",
-      roleKh: "ប្រធាន ក្រុមហ៊ុនឌីជីថល",
-      textEn: "Heang's innovation-driven approach transformed our legacy systems into cutting-edge platforms. Phenomenal execution!",
-      textKh: "វិធីសាស្ត្របច្ចេកបច្ចប្បន្នរបស់ Heang បានផ្លាស់ប្តូរប្រព័ន្ធរបស់យើង។",
-      rating: 5,
-      icon: "⚡"
-    },
-    {
-      nameEn: "Veronica Song",
-      nameKh: " வெரோនिකా សង",
-      roleEn: "Tech Director, Innovation Hub",
-      roleKh: "នាយក បច្ចេកវិទ្យា",
-      textEn: "His full-stack expertise spanning frontend, backend, and DevOps is truly rare and invaluable to our operations.",
-      textKh: "ឯកទេស Full-stack របស់គាត់គឺម៉ាក និងកម្មវិធីដ៏ល្អ។",
-      rating: 5,
-      icon: "🔧"
-    },
-    {
-      nameEn: "Hassan Al-Rashid",
-      nameKh: "ហាសាន អាល់-រាស",
-      roleEn: "Managing Director, Finance Plus",
-      roleKh: "នាយក ហិរញ្ញវត្ថុ",
-      textEn: "Heang's blockchain and crypto integration expertise secured our platform against all threats. Top-tier security!",
-      textKh: "ការសុវត្ថិភាពបច្ចេកវិទ្យារបស់គាត់គឺលើស្មើលែង។",
-      rating: 5,
-      icon: "🔐"
-    },
-    {
-      nameEn: "Jennifer Thompson",
-      nameKh: "ជេនីផើ ថមផ្សុន",
-      roleEn: "VP Partnerships, Global Tech Alliance",
-      roleKh: "ប្រធាននាយក ការសហប្រឹងប្រឹង",
-      textEn: "His API design patterns and documentation standards became our company-wide best practices immediately!",
-      textKh: "ឯក្សារ API របស់គាត់គឺល្អបំផុត។",
-      rating: 5,
-      icon: "🌐"
-    },
-    {
-      nameEn: "Eric Volkmann",
-      nameKh: "អេរីក វូលក្ម៉ាន",
-      roleEn: "CTO, Enterprise Cloud Systems",
-      roleKh: "នាយក ក្លាउド",
-      textEn: "His cloud infrastructure optimization saved us $2M annually while improving performance by 400%!",
-      textKh: "ការកាត់បន្ថយលម្ johnny របស់គាត់បានសន្សំលុយក្រុមហ៊ុន។",
-      rating: 5,
-      icon: "☁️"
-    },
-    {
-      nameEn: "Sophia Kim",
-      nameKh: "សូផៀ គីម",
-      roleEn: "Head of Product Design, Creative Studio",
-      roleKh: "នាយក ឌីហ្សាញ",
-      textEn: "Heang's UX/UI implementation elevated our user satisfaction scores to 98% approval ratings!",
-      textKh: "ការ ឌីហ្សាញ របស់គាត់ផ្តល់ឧស្ស័យ ៩៨% ពីម្នាក់ក្នុងម្នាក់।",
-      rating: 5,
-      icon: "🎨"
-    },
-    {
-      nameEn: "Rajesh Patel",
-      nameKh: "រាជេស ផាតែល",
-      roleEn: "Founder, Data Analytics Inc.",
-      roleKh: "ស្ថាបនិក ក្រុមហ៊ុន",
-      textEn: "His machine learning implementations and AI models transformed our data insights exponentially!",
-      textKh: "ម៉ូដែល AI របស់គាត់បានផ្លាស់ប្តូរលទ្ធផល វិភាគទិន្នន័យ។",
-      rating: 5,
-      icon: "🤖"
-    },
-    {
-      nameEn: "Victoria Williams",
-      nameKh: "វីក្តូរៀ វីលៀម",
-      roleEn: "Chief Strategy Officer, Fortune Tech",
-      roleKh: "ប្រធាននាយក យុទ្ធសាស្ត្រ",
-      textEn: "Heang's strategic consulting transformed our business model. Revenue increased by 550% in 18 months!",
-      textKh: "យុទ្ធសាស្ត្របច្ចាក្សរ របស់គាត់បានលើកលំដាប់ការលក់ ៥៥០% ក្នុង ១៨ខែ។",
-      rating: 5,
-      icon: "📈"
-    }
-  ];
-
-  const highlights = [
-    {
-      titleEn: "100% System Uptime Achievement",
-      titleKh: "សម្រេច ១០០% ដំណើរការ",
-      descEn: "Maintained flawless infrastructure performance across all national branches with zero downtime.",
-      descKh: "រក្សាប្រព័ន្ធដំណើរការល្អ ១០០% នៅគ្រប់មូលដ្ឋាន។",
-      icon: "🏆",
-      value: "24/7"
-    },
-    {
-      titleEn: "45% Market Conversion Boost",
-      titleKh: "ការលូតលាស់ ៤៥% ក្នុងលក់",
-      descEn: "Implemented advanced ad strategies that significantly increased customer conversion rates nationwide.",
-      descKh: "បានយុទ្ធសាស្ត្រផ្សាយពាណិជ្ជកម្ម ដែលបង្កើនការលក់។",
-      icon: "📈",
-      value: "+45%"
-    },
-    {
-      titleEn: "15+ Systems Architected",
-      titleKh: "ប្រព័ន្ធ ១៥+ បានរៀបចំ",
-      descEn: "Designed and deployed multiple enterprise-grade solutions serving thousands of users.",
-      descKh: "ការរចនាប្រព័ន្ធសម្រាប់អង្គការធំៗ។",
-      icon: "⚙️",
-      value: "15+"
-    },
-    {
-      titleEn: "National Digital Leader",
-      titleKh: "ឯកទេស ដឹកនាំឌីជីថល",
-      descEn: "Recognized as a key strategic leader in Cambodia's digital transformation initiatives.",
-      descKh: "ទទួលស្គាល់ជាឯកទេស ដឹកនាំឌីជីថល។",
-      icon: "👑",
-      value: "#1"
-    }
-  ];
-
-  const socialLinks = [
-    { name: "GitHub", url: "https://github.com/khoem168" },
-    { name: "Facebook", url: "https://facebook.com/heang.chhengkhoem.me" },
-    { name: "YouTube", url: "https://youtube.com/@khoemofficial" },
-    { name: "TikTok", url: "https://tiktok.com/@khoem168" },
-    { name: "Telegram", url: "https://t.me/khoem168" }
-  ];
-
-  /* ================= RUNTIME LOGIC ================= */
   useEffect(() => {
-    setMounted(true);
-    document.documentElement.setAttribute('data-theme', theme);
+    const storedTheme = localStorage.getItem('portfolio-theme') as Theme | null;
+    if (storedTheme === 'dark' || storedTheme === 'light') {
+      setTheme(storedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('portfolio-theme', theme);
+    document.documentElement.style.colorScheme = theme;
   }, [theme]);
 
   useEffect(() => {
-    const onScroll = () => {
-      const height = document.body.scrollHeight - window.innerHeight;
-      if (height > 0) setScrollProgress((window.scrollY / height) * 100);
+    const sectionIds = ['top', ...navigation.map((item) => item.id)];
 
-      const entries = Object.entries(sectionsMap) as [SectionKey, React.RefObject<HTMLElement | null>][];
-      for (const [key, ref] of entries) {
-        const el = ref.current;
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            setActive(key);
-            break;
-          }
-        }
-      }
+    const updateScrollState = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(scrollableHeight > 0 ? (window.scrollY / scrollableHeight) * 100 : 0);
+
+      const marker = window.scrollY + window.innerHeight * 0.34;
+      let current = 'top';
+      sectionIds.forEach((id) => {
+        const section = document.getElementById(id);
+        if (section && section.offsetTop <= marker) current = id;
+      });
+      setActiveSection(current);
     };
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [sectionsMap]);
 
-  const scrollTo = (key: SectionKey) => sectionsMap[key].current?.scrollIntoView({ behavior: 'smooth' });
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+    window.addEventListener('resize', updateScrollState);
+    return () => {
+      window.removeEventListener('scroll', updateScrollState);
+      window.removeEventListener('resize', updateScrollState);
+    };
+  }, []);
 
-  // Native SVGs to avoid Vercel module errors
-  const Icons = {
-    External: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-  };
+  useEffect(() => {
+    document.documentElement.classList.add('reveal-ready');
+    const elements = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const t = {
-    en: {
-      heroTitle: 'Heang Chheng Khoem',
-      heroSub: 'Senior Full-Stack Architect • National Operations Lead • Digital Strategist',
-      aboutHeader: 'Full Executive Narrative',
-      aboutSummary: "As a versatile Software Engineer and IT Digital Marketing Specialist, I bridge the gap between technical infrastructure and national brand growth. With a deep foundation in full-stack architecture—specializing in Angular, .NET Core, and Oracle Database—I build robust enterprise applications that drive business dominance. Currently leading the technical and digital strategy for '888 Up Fast Cash', I manage complex ad-boosting campaigns, KHQR payment integrations, and technical SEO networks to ensure 100% digital uptime and measurable ROI.",
-      cta: 'Initialize Partnership',
-      emailCta: 'Direct Protocol Mail',
-    },
-    kh: {
-      heroTitle: 'ហ៊ាង ឆេង ខឹម',
-      heroSub: 'វិស្វករកម្មវិធីជាន់ខ្ពស់ • ប្រធានប្រតិបត្តិការ @ 888 Up',
-      aboutHeader: 'ប្រវត្តិរូបសង្ខេបប្រតិបត្តិ',
-      aboutSummary: "ក្នុងនាមជាអ្នកជំនាញ IT និង Digital Marketing ខ្ញុំតភ្ជាប់រវាងហេដ្ឋារចនាសម្ព័ន្ធបច្ចេកទេស និងការលូតលាស់ម៉ាកយីហោថ្នាក់ជាតិ។ ជាមួយនឹងមូលដ្ឋានគ្រឹះយ៉ាងរឹងមាំក្នុងស្ថាបត្យកម្ម Full-stack—ជាពិសេស Angular, .NET Core, និង Oracle Database—ខ្ញុំបង្កើតកម្មវិធីសហគ្រាសដ៏រឹងមាំ។ បច្ចុប្បន្នដឹកនាំយុទ្ធសាស្ត្របច្ចេកទេស និងឌីជីថលសម្រាប់ '888 Up Fast Cash' ខ្ញុំគ្រប់គ្រងយុទ្ធនាការផ្សព្វផ្សាយពាណិជ្ជកម្ម និងការរួមបញ្ចូលការទូទាត់ KHQR ដើម្បីធានាបាននូវដំណើរការប្រព័ន្ធ ១០០%។",
-      cta: 'ចាប់ផ្តើមការងារ',
-      emailCta: 'ផ្ញើអ៊ីមែលផ្ទាល់',
+    if (reduceMotion) {
+      elements.forEach((element) => element.classList.add('is-visible'));
+      return;
     }
-  }[lang];
 
-  if (!mounted) return null;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -45px' },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [language]);
+
+  useEffect(() => {
+    if (selectedProject === null) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setSelectedProject(null);
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [selectedProject]);
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
-    <main className={`min-h-screen ${theme === 'dark' ? 'bg-[#050505] text-white' : 'bg-[#fcfcfc] text-black'} font-sans transition-colors duration-700 overflow-x-hidden text-left`}>
-      {/* Accessibility: Skip to main content link */}
-      <a href="#home" className="fixed top-0 left-0 z-[999] -translate-y-full focus:translate-y-0 bg-cyan-500 text-white px-4 py-2 rounded-b text-sm font-bold transition-transform duration-200">
-        Skip to main content
+    <main className={`site-shell theme-${theme} ${language === 'kh' ? 'font-khmer' : ''}`}>
+      <a className="skip-link" href="#main-content">
+        Skip to content
       </a>
-      
-      {/* 1. NAV (PREMIUM COLD AESTHETIC) */}
-      <nav className={`fixed top-0 w-full z-50 ${theme === 'dark' ? 'bg-black/70' : 'bg-white/70'} backdrop-blur-xl border-b border-cyan-500/10 py-5 px-4 md:px-8 flex justify-between items-center`}>
-        <div className="h-[2px] bg-gradient-to-r from-cyan-500 via-blue-500 to-teal-500 absolute top-0 left-0 transition-all duration-1000" style={{ width: `${scrollProgress}%` }} />
-        <span className="text-lg md:text-xl font-black italic tracking-tighter text-cyan-400 underline uppercase cursor-pointer hover:text-cyan-300 transition-colors duration-300" onClick={() => scrollTo('home')}>Khoem.EXE</span>
-        
-        {/* DESKTOP NAV */}
-        <div className="hidden lg:flex gap-6 md:gap-8 text-[10px] uppercase font-bold opacity-40">
-          {(Object.keys(sectionsMap) as SectionKey[]).map((key) => (
-            <button key={key} onClick={() => scrollTo(key)} className={`transition-all duration-300 hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 rounded px-2 py-1 ${active === key ? 'text-cyan-400 opacity-100' : ''}`}>{key}</button>
-          ))}
-        </div>
 
-        <div className="flex gap-2 md:gap-4 items-center">
-          <button onClick={() => setLang(lang === 'en' ? 'kh' : 'en')} aria-label={`Switch to ${lang === 'en' ? 'Khmer' : 'English'}`} className="text-[10px] font-black border border-cyan-500/30 px-3 md:px-4 py-1.5 rounded-full hover:bg-cyan-500/20 hover:text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 transition-all duration-300 uppercase">{lang === 'en' ? 'KH' : 'EN'}</button>
-          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`} aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`} className="p-2 rounded-full border border-cyan-500/30 hover:bg-cyan-500/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 transition-all duration-300">{theme === 'dark' ? '☀️' : '🌙'}</button>
-          <div className="hidden md:block">
-            <XmasToggle />
-          </div>
-          
-          {/* MOBILE MENU BUTTON */}
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'} aria-expanded={mobileMenuOpen} className="lg:hidden p-2 rounded-full border border-cyan-500/30 hover:bg-cyan-500/10 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 transition-all duration-300">
-            {mobileMenuOpen ? '✕' : '☰'}
-          </button>
-        </div>
-      </nav>
+      <header className="site-header">
+        <span className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
+        <div className="header-inner">
+          <a className="brand" href="#top" onClick={closeMenu} aria-label="Heang Chheng Khoem, home">
+            <span className="brand-mark">H</span>
+            <span className="brand-name">
+              Heang
+              <small>Chheng Khoem</small>
+            </span>
+          </a>
 
-      {/* MOBILE NAV MENU - COLD AESTHETIC */}
-      {mobileMenuOpen && (
-        <div className={`fixed top-20 left-0 w-full z-40 lg:hidden ${theme === 'dark' ? 'bg-black/95 border-cyan-500/20' : 'bg-white/95 border-cyan-500/10'} backdrop-blur-xl border-b py-6 px-6 flex flex-col gap-4`}>
-          {(Object.keys(sectionsMap) as SectionKey[]).map((key) => (
-            <button key={key} onClick={() => { scrollTo(key); setMobileMenuOpen(false); }} className={`text-left text-sm uppercase font-bold transition-all duration-300 hover:text-cyan-400 ${active === key ? 'text-cyan-400' : 'opacity-40'}`}>{key}</button>
-          ))}
-          <div className="pt-2 border-t border-cyan-500/10">
-            <XmasToggle />
-          </div>
-        </div>
-      )}
-
-      {/* 2. HOME - PREMIUM COLD */}
-      <section ref={homeRef} className="h-screen flex flex-col justify-center items-center text-center px-4 md:px-6 relative pt-20 md:pt-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-blue-500/5 to-teal-500/5 pointer-events-none" />
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <h1 className="text-4xl sm:text-6xl md:text-[140px] font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-teal-400 leading-none tracking-tighter mb-6 md:mb-8 relative z-10 animate-pulse hover:animate-none transition-all duration-500">Heang Chheng Khoem</h1>
-        <p className="max-w-2xl text-sm sm:text-base md:text-lg opacity-40 font-mono uppercase mb-8 md:mb-12 tracking-widest leading-relaxed px-2 relative z-10 group hover:opacity-60 transition-opacity duration-500">{t.heroSub}</p>
-        <button onClick={() => scrollTo('contact')} className="px-8 sm:px-12 md:px-16 py-4 md:py-6 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-black rounded-2xl shadow-[0_0_40px_rgba(34,211,238,0.3)] hover:shadow-[0_0_60px_rgba(34,211,238,0.5)] hover:scale-110 active:scale-95 transition-all duration-300 text-xs uppercase tracking-[0.3em] md:tracking-[0.4em] relative z-10">{t.cta}</button>
-      </section>
-
-      {/* 3. PERFORMANCE STATS */}
-      <section className={`py-12 md:py-20 border-y border-gray-500/10 ${theme === 'dark' ? 'bg-zinc-900/10' : 'bg-gray-100/50'}`}>
-        <div className="container mx-auto px-4 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 text-center">
-          {stats.map((stat, i) => (
-            <div key={i} className="space-y-2 hover:scale-105 transition-transform duration-300">
-              <div className="text-2xl sm:text-3xl md:text-4xl font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">{stat.val}</div>
-              <div className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest opacity-40">{lang === 'en' ? stat.label : stat.kh}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. ABOUT (Executive Summary & Picture) */}
-      <section ref={aboutRef} className="py-20 md:py-40">
-        <div className="container mx-auto px-4 md:px-10 grid lg:grid-cols-2 gap-12 md:gap-24 items-center">
-          <div className="relative group max-w-md mx-auto lg:mx-0 order-2 lg:order-1">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 blur-[60px] rounded-full opacity-40 group-hover:opacity-100 transition-opacity duration-1000" />
-            <div className="relative aspect-square rounded-[40px] md:rounded-[60px] overflow-hidden border border-gray-500/20 bg-zinc-900 shadow-2xl group-hover:border-cyan-400/50 transition-all duration-700">
-              <Image src="/168.svg" alt="Heang Chheng Khoem" fill priority className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000" />
-            </div>
-          </div>
-          <div className="space-y-8 md:space-y-12 order-1 lg:order-2">
-            <h3 className="text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.6em] text-cyan-400 italic">{t.aboutHeader}</h3>
-            <p className="text-lg md:text-xl lg:text-2xl font-serif italic text-cyan-300 leading-relaxed tracking-tight">{t.aboutSummary}</p>
-            <div className={`p-6 md:p-8 rounded-[40px] font-mono text-xs md:text-sm space-y-3 opacity-60 border border-cyan-500/20 ${theme === 'dark' ? 'bg-zinc-900/50' : 'bg-gray-100'}`}>
-               <p className="text-cyan-400 italic">{lang === 'en' ? '> Role: National Operations Lead @ 888_Up' : '> តួនាទី៖ ប្រធានប្រតិបត្តិការ @ 888_Up'}</p>
-               <p className="animate-pulse">{lang === 'en' ? '> Status: Performance Optimized.' : '> ស្ថានភាព៖ ប្រព័ន្ធត្រូវបានបង្កើនប្រសិទ្ធភាព។'}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. SERVICES SECTION */}
-      <section ref={servicesRef} className={`py-20 md:py-40 border-y border-gray-500/10 ${theme === 'dark' ? 'bg-zinc-900/20' : 'bg-gray-50'}`}>
-        <div className="container mx-auto px-4 md:px-8">
-          <h3 className="text-center text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.5em] mb-16 md:mb-24 opacity-30 italic">Core Solutions Matrix</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {services.map((s, i) => (
-              <div key={i} className={`p-8 md:p-12 rounded-[50px] border border-gray-500/10 shadow-2xl transition-all duration-300 hover:border-cyan-400/30 hover:scale-105 ${theme === 'dark' ? 'bg-black' : 'bg-white'}`}>
-                <div className="text-4xl md:text-5xl mb-8 md:mb-10">{s.icon}</div>
-                <h4 className="text-sm font-black uppercase tracking-widest mb-4 italic text-cyan-400">{lang === 'en' ? s.titleEn : s.titleKh}</h4>
-                <p className="text-xs opacity-40 leading-relaxed font-light italic">{lang === 'en' ? s.descEn : s.descKh}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. SKILLS SECTION (Full Skillset) */}
-      <section ref={skillsRef} className="py-20 md:py-40">
-        <div className="container mx-auto px-4 md:px-10">
-          <h3 className="text-center text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.6em] mb-16 md:mb-24 opacity-30 italic underline decoration-cyan-400/20 underline-offset-[15px]">Infrastructure Topology</h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
-            {skillGroups.map((group, i) => (
-              <div key={i} className={`p-12 md:p-16 rounded-[60px] border border-gray-500/10 shadow-xl transition-all duration-300 hover:border-cyan-400/30 hover:scale-105 ${theme === 'dark' ? 'bg-zinc-900/30' : 'bg-gray-100/30'}`}>
-                <h4 className="text-xl md:text-2xl font-bold text-cyan-400 border-b border-cyan-400/10 pb-6 md:pb-8 uppercase mb-8 md:mb-12 italic tracking-tighter">{lang === 'en' ? group.titleEn : group.titleKh}</h4>
-                <div className="flex flex-wrap gap-3 md:gap-4">
-                  {group.items.map((skill, j) => (
-                    <span key={j} className={`px-4 md:px-6 py-2 md:py-3 rounded-2xl text-[10px] md:text-[11px] font-black border border-gray-500/10 transition-all duration-300 uppercase tracking-tighter hover:text-cyan-400 hover:scale-105 ${theme === 'dark' ? 'bg-zinc-800 opacity-60 hover:opacity-100' : 'bg-white opacity-80'}`}>{skill}</span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. PLATFORMS SECTION */}
-      <section ref={platformsRef} className={`py-20 md:py-40 border-y border-gray-500/10 ${theme === 'dark' ? 'bg-zinc-900/10' : 'bg-gray-50'}`}>
-        <div className="container mx-auto px-4 md:px-8 text-center">
-          <h3 className="text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.6em] mb-16 md:mb-24 opacity-30 italic">Proprietary Ecosystem</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
-            {platforms.map((p, i) => (
-              <div key={i} className={`p-8 md:p-12 rounded-[50px] border border-gray-500/10 transition-all duration-300 hover:border-cyan-400 hover:scale-105 ${theme === 'dark' ? 'bg-black' : 'bg-white shadow-xl'}`}>
-                <div className="text-cyan-400 text-2xl md:text-3xl mb-6 md:mb-8">{p.icon}</div>
-                <h4 className="text-base md:text-lg font-black uppercase mb-3 md:mb-4 italic tracking-tighter">{p.name}</h4>
-                <p className="text-[10px] opacity-40 font-light italic leading-relaxed">{p.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. PORTFOLIO SECTION */}
-      <section ref={portfolioRef} className="py-20 md:py-40">
-        <div className="container mx-auto px-4 md:px-10">
-          <h3 className="text-center text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.5em] mb-16 md:mb-24 opacity-30 italic">Case Studies & Impact</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
-            {portfolioItems.map((item, i) => (
-              <div key={i} className={`p-12 md:p-16 text-center border border-gray-500/10 rounded-[60px] hover:border-cyan-400 transition-all duration-300 group hover:scale-105 ${theme === 'dark' ? 'bg-zinc-900/20' : 'bg-gray-100/50 shadow-lg'}`}>
-                <div className="text-4xl md:text-5xl mb-6 md:mb-8">{item.icon}</div>
-                <span className="text-[10px] font-black uppercase text-blue-400 mb-2 block tracking-widest">{item.cat}</span>
-                <h4 className="text-lg md:text-2xl font-serif italic text-cyan-400 mb-4 md:mb-6">{item.name}</h4>
-                <span className="text-[11px] font-black uppercase opacity-40 group-hover:text-cyan-400 transition-colors duration-300">{item.impact}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. HIGHLIGHTS SECTION (Featured Work) */}
-      <section ref={highlightsRef} className={`py-20 md:py-40 border-y border-gray-500/10 ${theme === 'dark' ? 'bg-zinc-900/10' : 'bg-gray-50'}`}>
-        <div className="container mx-auto px-4 md:px-10">
-          <h3 className="text-center text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.5em] mb-16 md:mb-24 opacity-30 italic">Key Achievement Highlights</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {highlights.map((highlight, i) => (
-              <div key={i} className={`p-8 md:p-10 rounded-[50px] border border-gray-500/10 transition-all duration-300 hover:border-cyan-400/50 group hover:scale-105 ${theme === 'dark' ? 'bg-black' : 'bg-white shadow-lg'}`}>
-                <div className="text-5xl md:text-6xl mb-6 group-hover:text-cyan-400 transition-colors duration-300">{highlight.icon}</div>
-                <div className="text-2xl md:text-3xl font-bold text-cyan-400 mb-4">{highlight.value}</div>
-                <h4 className="text-sm md:text-base font-bold uppercase mb-3 tracking-tighter">{lang === 'en' ? highlight.titleEn : highlight.titleKh}</h4>
-                <p className="text-[11px] opacity-40 leading-relaxed font-light italic">{lang === 'en' ? highlight.descEn : highlight.descKh}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 10. TESTIMONIALS SECTION (Client Reviews) - PREMIUM COLD */}
-      <section ref={testimonialsRef} className="py-20 md:py-40 relative overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="container mx-auto px-4 md:px-10 relative z-10">
-          <h3 className="text-center text-xs font-black uppercase tracking-[0.4em] md:tracking-[0.5em] mb-16 md:mb-24 opacity-30 italic">Premium Testimonials (21 Industry Leaders)</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-            {testimonials.map((testimonial, i) => (
-              <div key={i} className={`p-7 md:p-9 rounded-[40px] border border-cyan-500/20 transition-all duration-500 hover:border-cyan-400/50 group hover:shadow-[0_0_30px_rgba(34,211,238,0.2)] hover:scale-105 backdrop-blur-sm ${theme === 'dark' ? 'bg-gradient-to-br from-slate-900/80 to-slate-800/60' : 'bg-gradient-to-br from-blue-50/80 to-cyan-50/60'}`}>
-                <div className="flex items-center mb-5 group-hover:opacity-100 transition-all duration-500">
-                  <div className="text-2xl mr-2.5 group-hover:scale-110 transition-transform duration-300">{testimonial.icon}</div>
-                  <div className="flex-1">
-                    <h4 className="text-xs md:text-sm font-bold italic text-cyan-400 line-clamp-1">{lang === 'en' ? testimonial.nameEn : testimonial.nameKh}</h4>
-                    <p className="text-[9px] opacity-40 leading-tight line-clamp-2 hover:opacity-60 transition-opacity">{lang === 'en' ? testimonial.roleEn : testimonial.roleKh}</p>
-                  </div>
-                </div>
-                <div className="flex gap-0.5 mb-5">
-                  {Array(testimonial.rating).fill(0).map((_, j) => (
-                    <span key={j} className="text-cyan-400 text-xs opacity-70 group-hover:opacity-100 transition-opacity duration-300" style={{animationDelay: `${j * 50}ms`}}>★</span>
-                  ))}
-                </div>
-                <p className="text-[10px] italic leading-relaxed opacity-60 group-hover:opacity-80 transition-opacity duration-500">&quot;{lang === 'en' ? testimonial.textEn : testimonial.textKh}&quot;</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 11. CONTACT & SOCIALS - PREMIUM COLD */}
-      <section ref={contactRef} className="py-32 md:py-72 text-center relative overflow-hidden">
-        <div className="absolute top-0 left-1/3 w-96 h-96 bg-cyan-500/5 blur-[150px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-blue-500/5 blur-[150px] rounded-full pointer-events-none" />
-        <h3 className="text-4xl sm:text-6xl md:text-[140px] font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-teal-400 mb-12 md:mb-16 tracking-tighter leading-none group cursor-pointer hover:scale-105 transition-transform duration-500 relative z-10">Let&apos;s Build.</h3>
-        
-        <div className="flex flex-col items-center gap-8 md:gap-10 relative z-10">
-          <a href="mailto:heang.chhengkhoem.me@gmail.com" className="inline-block px-8 sm:px-16 md:px-24 py-6 md:py-8 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-black rounded-3xl tracking-[0.3em] md:tracking-[0.5em] text-xs shadow-[0_0_40px_rgba(34,211,238,0.3)] hover:shadow-[0_0_60px_rgba(34,211,238,0.5)] hover:scale-110 active:scale-95 transition-all duration-300 uppercase">{t.emailCta}</a>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 max-w-4xl opacity-40 hover:opacity-100 transition-opacity duration-500">
-            {socialLinks.map((link, i) => (
-              <a key={i} href={link.url} target="_blank" className="p-6 md:p-10 rounded-[40px] border border-cyan-500/20 transition-all duration-500 hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] hover:scale-110 hover:opacity-100 flex flex-col items-center group bg-gradient-to-br from-slate-900/20 to-slate-800/10 hover:from-slate-900/40 hover:to-slate-800/20 backdrop-blur-sm">
-                <div className="text-[9px] md:text-xs font-black uppercase tracking-widest group-hover:text-cyan-400 transition-all duration-300">{link.name}</div>
-                <div className="mt-3 md:mt-4 group-hover:scale-125 transition-transform duration-300"><Icons.External /></div>
+          <nav className={`site-nav ${menuOpen ? 'is-open' : ''}`} aria-label="Main navigation">
+            {navigation.map((item) => (
+              <a
+                className={activeSection === item.id ? 'is-active' : ''}
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={closeMenu}
+                aria-current={activeSection === item.id ? 'location' : undefined}
+              >
+                {item[language]}
               </a>
             ))}
+            <a className="nav-cta" href="mailto:heang.chhengkhoem.me@gmail.com" onClick={closeMenu}>
+              {t.contactMe}
+              <Icon name="arrow" size={17} />
+            </a>
+          </nav>
+
+          <div className="header-actions">
+            <button
+              className="language-toggle"
+              onClick={() => setLanguage(language === 'en' ? 'kh' : 'en')}
+              aria-label={language === 'en' ? 'Switch to Khmer' : 'Switch to English'}
+            >
+              {language === 'en' ? 'ខ្មែរ' : 'EN'}
+            </button>
+            <button
+              className="icon-button"
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            >
+              <Icon name={theme === 'light' ? 'moon' : 'sun'} size={18} />
+            </button>
+            <button
+              className="icon-button menu-button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            >
+              <Icon name={menuOpen ? 'x' : 'menu'} size={20} />
+            </button>
           </div>
         </div>
-      </section>
+      </header>
 
-      <footer className="py-12 md:py-24 border-t border-gray-500/10 text-center opacity-30 text-[9px] md:text-[10px] font-mono uppercase tracking-[0.5em] md:tracking-[1em] px-4">
-        © 2026 Heang Chheng Khoem | National Operations Lead | Cambodia
+      <div id="main-content">
+        <section className="hero section-grid" id="top">
+          <div className="hero-orb hero-orb-one" />
+          <div className="hero-orb hero-orb-two" />
+          <div className="content-container hero-grid">
+            <div className="hero-copy" data-reveal>
+              <div className="availability-pill">
+                <span />
+                {t.availability}
+              </div>
+              <p className="eyebrow">{t.eyebrow}</p>
+              <h1>{t.heroTitle}</h1>
+              <p className="hero-description">{t.heroDescription}</p>
+              <div className="hero-actions">
+                <a className="button button-primary" href="#work">
+                  {t.viewWork}
+                  <Icon name="arrow" size={18} />
+                </a>
+                <a className="button button-secondary" href="mailto:heang.chhengkhoem.me@gmail.com">
+                  {t.contactMe}
+                </a>
+              </div>
+              <div className="hero-meta">
+                <span>{t.basedIn}</span>
+                <span className="meta-divider" />
+                <span>{t.experience}</span>
+              </div>
+            </div>
+
+            <div className="portrait-stage" data-reveal>
+              <div className="portrait-backdrop">
+                <span className="portrait-code">HCK / 168</span>
+                <span className="portrait-year">2026</span>
+                <Image
+                  src="/images/profile-heang.webp"
+                  alt="Heang Chheng Khoem by the sea at sunset"
+                  fill
+                  priority
+                  sizes="(max-width: 900px) 80vw, 42vw"
+                  className="portrait-image"
+                />
+              </div>
+              <div className="floating-card floating-card-top">
+                <span className="floating-icon"><Icon name="spark" size={18} /></span>
+                <span>
+                  <small>Current focus</small>
+                  Digital systems
+                </span>
+              </div>
+              <div className="floating-card floating-card-bottom">
+                <span className="floating-icon"><Icon name="support" size={18} /></span>
+                <span>
+                  <small>Approach</small>
+                  Build · operate · improve
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="content-container stats-panel" data-reveal>
+            {t.stats.map((stat) => (
+              <div className="stat" key={stat.label}>
+                <strong>{stat.value}</strong>
+                <span>{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="section section-about" id="about">
+          <div className="content-container about-grid">
+            <div className="section-heading" data-reveal>
+              <p className="section-label">{t.aboutLabel}</p>
+              <h2>{t.aboutTitle}</h2>
+            </div>
+            <div className="about-content" data-reveal>
+              <p className="about-lead">{t.aboutText}</p>
+              <p>{t.aboutTextTwo}</p>
+              <div className="focus-card">
+                <div className="focus-icon"><Icon name="growth" size={23} /></div>
+                <div>
+                  <span>{t.roleLabel}</span>
+                  <strong>{t.role}</strong>
+                  <p>{t.roleCompany}</p>
+                </div>
+              </div>
+              <div className="personal-signature">
+                <span>Heang.</span>
+                <p>{language === 'en' ? 'Thoughtful systems · clear communication · useful outcomes' : 'ប្រព័ន្ធល្អ · ការទំនាក់ទំនងច្បាស់ · លទ្ធផលមានប្រយោជន៍'}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-soft" id="services">
+          <div className="content-container">
+            <div className="section-intro" data-reveal>
+              <div className="section-heading">
+                <p className="section-label">{t.servicesLabel}</p>
+                <h2>{t.servicesTitle}</h2>
+              </div>
+              <p>{t.servicesText}</p>
+            </div>
+            <div className="services-grid">
+              {services.map((service) => (
+                <article className="service-card" data-reveal key={service.number}>
+                  <div className="service-top">
+                    <span className="service-icon"><Icon name={service.icon} size={24} /></span>
+                    <span className="service-number">{service.number}</span>
+                  </div>
+                  <p className="service-label">{service.label}</p>
+                  <h3>{language === 'en' ? service.title : service.titleKh}</h3>
+                  <p>{language === 'en' ? service.description : service.descriptionKh}</p>
+                  <ul className="service-list">
+                    {service.items.map((item) => (
+                      <li key={item}>
+                        <span />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section" id="work">
+          <div className="content-container">
+            <div className="section-intro" data-reveal>
+              <div className="section-heading">
+                <p className="section-label">{t.workLabel}</p>
+                <h2>{t.workTitle}</h2>
+              </div>
+              <p>{t.workText}</p>
+            </div>
+            <div className="projects-grid">
+              {projects.map((project, index) => (
+                <article className={`project-card project-${project.tone}`} data-reveal key={project.title}>
+                  <div className="project-visual">
+                    <Image
+                      src={project.image}
+                      alt={project.imageAlt}
+                      fill
+                      sizes="(max-width: 620px) calc(100vw - 28px), (max-width: 1060px) 50vw, 580px"
+                      className="project-image"
+                    />
+                  </div>
+                  <div className="project-body">
+                    <div className="project-card-meta">
+                      <span>
+                        0{index + 1} · {language === 'en' ? 'Interface concept' : 'គំរូចំណុចប្រទាក់'}
+                      </span>
+                      <strong>{project.result}</strong>
+                    </div>
+                    <p className="project-type">{project.type}</p>
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <div className="tag-list">
+                      {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                    </div>
+                    <button className="project-open" onClick={() => setSelectedProject(index)}>
+                      View case study
+                      <Icon name="arrow" size={17} />
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section toolkit-section" id="skills">
+          <div className="content-container toolkit-content">
+            <div className="toolkit-header" data-reveal>
+              <div className="section-heading">
+                <p className="section-label">{t.toolkitLabel}</p>
+                <h2>{t.toolkitTitle}</h2>
+              </div>
+              <div className="toolkit-summary">
+                <div className="summary-meta">
+                  <span>12</span>
+                  <strong>
+                    {language === 'en' ? 'Connected capabilities' : 'ជំនាញដែលបានភ្ជាប់គ្នា'}
+                  </strong>
+                </div>
+                <p>{t.toolkitText}</p>
+              </div>
+            </div>
+
+            <div className="skill-groups">
+              {skillGroups.map((group) => (
+                <article className="skill-group-card" data-reveal key={group.number}>
+                  <div className="skill-group-top">
+                    <span className="skill-group-icon"><Icon name={group.icon} size={22} /></span>
+                    <span className="skill-group-number">{group.number}</span>
+                  </div>
+                  <div className="skill-group-copy">
+                    <p>{group.label}</p>
+                    <h3>{language === 'en' ? group.title : group.titleKh}</h3>
+                    <span>{language === 'en' ? group.description : group.descriptionKh}</span>
+                  </div>
+                  <div className="skill-list">
+                    {group.skills.map((skill) => {
+                      const PlatformIcon = skillIconMap[skill];
+                      return (
+                        <span key={skill} title={skill}>
+                          <b className="skill-platform-icon"><PlatformIcon aria-hidden="true" /></b>
+                          <em>{skill}</em>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section section-soft">
+          <div className="content-container">
+            <div className="section-heading process-heading" data-reveal>
+              <p className="section-label">{t.processLabel}</p>
+              <h2>{t.processTitle}</h2>
+            </div>
+            <div className="process-grid">
+              {t.process.map((step, index) => (
+                <article className="process-card" data-reveal key={step.title}>
+                  <span>0{index + 1}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <footer className="site-footer" id="contact">
+        <div className="content-container footer-clean" data-reveal>
+          <div className="footer-clean-cta">
+            <div>
+              <div className="footer-clean-status">
+                <span />
+                {language === 'en' ? 'Available for selected projects' : 'ទទួលគម្រោងដែលសមស្រប'}
+              </div>
+              <h2>
+                {language === 'en'
+                  ? 'Let’s build something useful.'
+                  : 'យើងបង្កើតអ្វីដែលមានប្រយោជន៍ជាមួយគ្នា។'}
+              </h2>
+              <p>
+                {language === 'en'
+                  ? 'Tell me about your idea, goal, or technical challenge.'
+                  : 'ប្រាប់ខ្ញុំអំពីគំនិត គោលដៅ ឬបញ្ហាបច្ចេកទេសរបស់អ្នក។'}
+              </p>
+            </div>
+            <a className="button footer-clean-button" href="mailto:heang.chhengkhoem.me@gmail.com">
+              <span>{language === 'en' ? 'Start a conversation' : 'ចាប់ផ្តើមការសន្ទនា'}</span>
+              <Icon name="arrow" size={18} />
+            </a>
+          </div>
+
+          <div className="footer-clean-main">
+            <div className="footer-clean-identity">
+              <a href="#top" aria-label="Heang Chheng Khoem, back to top">
+                <span>H</span>
+                <div>
+                  <strong>Heang Chheng Khoem</strong>
+                  <small>{t.footer}</small>
+                </div>
+              </a>
+            </div>
+
+            <div className="footer-clean-socials" aria-label="Social platforms">
+              {socialLinks.map((link) => {
+                const SocialIcon = socialIconMap[link.name];
+                return (
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    key={link.name}
+                    aria-label={`Visit ${link.name}`}
+                  >
+                    <SocialIcon aria-hidden="true" />
+                    <span>{link.name}</span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="footer-clean-bottom">
+            <p>© 2026 Heang Chheng Khoem. {language === 'en' ? 'All rights reserved.' : 'រក្សាសិទ្ធិគ្រប់យ៉ាង។'}</p>
+            <a href="#top">
+              {language === 'en' ? 'Back to top' : 'ត្រឡប់ទៅខាងលើ'}
+              <Icon name="arrow" size={15} />
+            </a>
+          </div>
+        </div>
       </footer>
 
-      <AuditTips />
+      <div className="mobile-contact-bar">
+        <a href="mailto:heang.chhengkhoem.me@gmail.com">{language === 'en' ? 'Email me' : 'ផ្ញើអ៊ីមែល'}</a>
+        <a href="https://t.me/khoem168" target="_blank" rel="noreferrer">
+          <SiTelegram aria-hidden="true" />
+          Telegram
+        </a>
+      </div>
 
-      {/* TELEGRAM FLOATING - COLD AESTHETIC */}
-      <a href="https://t.me/khoem168" target="_blank" className="fixed bottom-6 md:bottom-12 right-6 md:right-12 z-50 bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-5 md:px-10 py-3 md:py-5 rounded-3xl shadow-[0_0_30px_rgba(34,211,238,0.3)] hover:shadow-[0_0_50px_rgba(34,211,238,0.5)] hover:scale-110 transition-all duration-300 border border-cyan-400/30 font-black text-[9px] md:text-[10px] uppercase tracking-widest italic flex items-center gap-3 md:gap-4 group">
-        <div className="w-2 md:w-2.5 h-2 md:h-2.5 rounded-full bg-white animate-pulse group-hover:animate-bounce"></div>
-        <span className="hidden sm:inline group-hover:tracking-[0.3em] md:group-hover:tracking-[0.4em] transition-all duration-500 uppercase">Telegram protocol</span>
-      </a>
+      {selectedProject !== null && (
+        <div className="case-modal" role="presentation" onMouseDown={() => setSelectedProject(null)}>
+          <article
+            className={`case-dialog project-${projects[selectedProject].tone}`}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="case-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button className="case-close" onClick={() => setSelectedProject(null)} aria-label="Close case study" autoFocus>
+              <Icon name="x" size={19} />
+            </button>
+            <div className="case-visual">
+              <Image
+                src={projects[selectedProject].image}
+                alt={projects[selectedProject].imageAlt}
+                fill
+                sizes="(max-width: 820px) calc(100vw - 32px), 820px"
+                className="case-image"
+              />
+              <span className="case-visual-shade" />
+              <div className="case-visual-copy">
+                <span>{projects[selectedProject].type}</span>
+                <strong>{projects[selectedProject].result}</strong>
+              </div>
+            </div>
+            <div className="case-content">
+              <p className="section-label">Anonymized project · Representative interface</p>
+              <h2 id="case-title">{projects[selectedProject].title}</h2>
+              <p className="case-intro">{projects[selectedProject].description}</p>
+              <div className="case-meta">
+                <div>
+                  <span>Role</span>
+                  <strong>{projects[selectedProject].role}</strong>
+                </div>
+                <div>
+                  <span>Timeline</span>
+                  <strong>{projects[selectedProject].timeline}</strong>
+                </div>
+                <div>
+                  <span>Core stack</span>
+                  <strong>{projects[selectedProject].stack.join(' · ')}</strong>
+                </div>
+              </div>
+              <div className="case-columns">
+                <div>
+                  <span>Challenge</span>
+                  <p>{projects[selectedProject].challenge}</p>
+                </div>
+                <div>
+                  <span>Solution</span>
+                  <p>{projects[selectedProject].solution}</p>
+                </div>
+              </div>
+              <div className="case-responsibilities">
+                <span>Responsibilities</span>
+                <div>
+                  {projects[selectedProject].responsibilities.map((responsibility) => (
+                    <strong key={responsibility}>{responsibility}</strong>
+                  ))}
+                </div>
+              </div>
+              <div className="case-outcomes">
+                {projects[selectedProject].outcomes.map((outcome) => (
+                  <span key={outcome}><i>✓</i>{outcome}</span>
+                ))}
+              </div>
+              <a href="mailto:heang.chhengkhoem.me@gmail.com" className="button button-primary">
+                Discuss a similar project
+                <Icon name="arrow" size={18} />
+              </a>
+            </div>
+          </article>
+        </div>
+      )}
     </main>
   );
 }
