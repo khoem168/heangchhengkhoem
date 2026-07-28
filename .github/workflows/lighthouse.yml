@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
@@ -40,14 +44,14 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const results = JSON.parse(fs.readFileSync('./lhr/manifest.json', 'utf8'));
+            const results = JSON.parse(fs.readFileSync('./.lighthouseci/manifest.json', 'utf8'));
             const latestRun = results[results.length - 1];
+            const performanceScore = Math.round(latestRun.summary.performance * 100);
             
             let comment = '## 🔍 Lighthouse Audit Results\n\n';
-            comment += `**Overall Score:** ${latestRun.summary.performance}\n\n`;
+            comment += `**Performance Score:** ${performanceScore}\n\n`;
             
-            const octokit = github.getOctokit(context.token);
-            octokit.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
